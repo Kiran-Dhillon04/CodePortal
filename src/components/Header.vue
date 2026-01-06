@@ -2,9 +2,7 @@
   <header class="main-container">
     <section class="sub-container">
       <h1>{{ appName }}</h1>
-      <nav>
-        <a class="nav-link" href="/" @click="onLogout()">Logout</a>
-      </nav>
+      <button type="button" class="logout" @click="onLogout()">Logout</button>
     </section>
   </header>
 </template>
@@ -35,10 +33,11 @@ const onLogout = () => {
   justify-content: space-between;
 }
 
-.nav-link {
+.logout{
   font-size: 1.5rem;
   color: rgb(244, 236, 226);
   font-weight: 400;
-  text-decoration: none;
+  outline: none;
+  background-color: rgb(112, 11, 11);
 }
 </style>

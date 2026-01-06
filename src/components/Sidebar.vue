@@ -2,13 +2,10 @@
   <aside class="sidebar">
     <button @click="isOpen = !isOpen">Menu</button>
     <ul v-if="isOpen">
-      <li
-        v-for="(item, index) in menu"
-        :key="index"
-        :class="{ active: activeMenu === index }"
-        @click="activeMenu = index"
-      >
-        {{ item }}
+      <li v-for="item in menu" :key="item.id">
+        <router-link :to="item.link" class="link" active-class="active">{{
+          item.name
+        }}</router-link>
       </li>
     </ul>
   </aside>
@@ -17,17 +14,27 @@
 <script setup>
 import { ref } from "vue";
 
-const menu = ["Dashboard", "Profile", "Settings"];
+const menu = ref([
+  { id: 1, name: "Home", link: "/" },
+  { id: 2, name: "Dashboard", link: "/dashboard" },
+  {
+    id: 3,
+    name: "Profile",
+    link: {
+      name: "Profile",
+      params: { id: 101 },
+      query: { tab: "about", edit: true },
+    },
+  },
+  { id: 4, name: "Settings", link: "/settings" },
+]);
 const isOpen = ref(true);
-const activeMenu = ref(0);
-
-
 </script>
 
 <style scoped>
 .sidebar {
   width: 200px;
-  height:91vh ;
+  height: 91vh;
   background: lightgray;
   padding: 10px;
 }
@@ -36,12 +43,24 @@ button {
 }
 
 li {
-  cursor: pointer;
-  padding: 6px;
+  margin-bottom: 6px;
 }
 
-li.active {
+.link {
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+}
+
+.link:hover {
+  background: #ddd;
+}
+
+:deep(.active) {
   background: #333;
   color: white;
+  text-decoration: none;
 }
 </style>

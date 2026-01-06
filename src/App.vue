@@ -1,16 +1,15 @@
 <template>
-  <Header :appName="projectName" @logout="handleLogout()"></Header>
-  <div class="siblings">
+  <Header :appName="projectName" @logout="handleLogout"></Header>
+  <div class="siblings" style="display: flex; gap: 20px;">
     <Sidebar></Sidebar>
-    <Dashboad></Dashboad>
+    <router-view></router-view>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import Header from "./components/Header.vue";
-import Sidebar from "./components/Sidebar.vue";
-import Dashboad from "./components/Dashboad.vue";
+import Header from "./components/header.vue";
+import Sidebar from "./components/sidebar.vue";
 
 const projectName = ref("CodePortal");
 const handleLogout = () => {
