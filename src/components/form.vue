@@ -1,6 +1,6 @@
 <template>
-  <section class="overlay" v-if="showModal">
-    <div class="modal">
+  <section class="overlay" v-if="showModal" @click="oncancel">
+    <div class="modal" @click.stop>
       <div class="title-x">
         <h2 class="title">Registration Form</h2>
         <span class="title" @click="oncancel">X</span>
