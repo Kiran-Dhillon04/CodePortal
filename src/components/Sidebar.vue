@@ -27,14 +27,15 @@ const menu = ref([
     },
   },
   { id: 4, name: "Settings", link: "/settings" },
+  { id: 5, name: "RegisteredUser", link:"/registeredUser"},
 ]);
 const isOpen = ref(true);
 </script>
 
 <style scoped>
 .sidebar {
-  width: 200px;
-  height: 91vh;
+  width: auto;
+  height:100vh;
   background: lightgray;
   padding: 10px;
 }

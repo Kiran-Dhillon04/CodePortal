@@ -4,14 +4,21 @@ import Settings from "../components/settings.vue";
 import Notifications from "../components/notifications.vue";
 import Dashboard from "../components/Dashboard.vue";
 import Profile from "../components/profile.vue";
+import RegisteredUser from "../components/registeredUser.vue";
+import Form from "../components/form.vue";
 
 const auth = {
-isLoggedIn:false,
-}
+  isLoggedIn: true,
+};
 
 const routes = [
   { path: "/", name: "Home", component: Home },
-  { path: "/dashboard", name: "Dashboard", component: Dashboard, meta:{requiresAuth:true} },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: { requiresAuth: true },
+  },
   {
     path: "/settings",
     name: "Settings",
@@ -27,6 +34,10 @@ const routes = [
 
   { path: "/profile/:id", name: "Profile", component: Profile },
   {
+    path: "/registeredUser", name: "RegisteredUser", component: RegisteredUser, children: [
+      { path: 'form', name: 'Form', component:Form}
+  ]},
+  {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: () => import("../components/pageNotFound.vue"),
@@ -41,9 +52,7 @@ export const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !auth.isLoggedIn) {
     alert("You must login first!");
-    return next({ name: 'Home' });
+    return next({ name: "Home" });
   }
   next();
-})
-
-
+});
