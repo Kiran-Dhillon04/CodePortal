@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div v-if="isModel">
+    <div v-if="isModal">
       <form @submit.prevent="onSubmit">
         <label for="name">Username</label>
         <input
@@ -38,17 +38,20 @@
 
       <!-- Progress Bar -->
       <section
-        v-if="isModel"
+        v-if="isModal"
         class="progress-layout"
         role="progressbar"
         aria-valuemin="0"
         aria-valuemax="100"
-        :aria-valuenow="progress"
+        :aria-valuenow="formStore.progress"
       >
-        <p>{{ progress }}% Completed</p>
+        <p>{{ formStore.progress }}% Completed</p>
 
         <div class="progress-bar">
-          <div class="bar-filled" :style="{ width: progress + '%' }"></div>
+          <div
+            class="bar-filled"
+            :style="{ width: formStore.progress + '%' }"
+          ></div>
         </div>
       </section>
     </div>
@@ -66,10 +69,13 @@
 
 <script setup>
 import { computed, reactive, ref } from "vue";
+import { useFormStore } from "../stores/formStore";
 
+const formStore = useFormStore();
 const showPopup = ref(false);
 const message = ref("Form Submitted Successfully!");
-const isModel = ref(true);
+const isModal = ref(true);
+
 const formData = reactive({
   userName: "",
   age: "",
@@ -77,28 +83,29 @@ const formData = reactive({
   email: "",
 });
 
-const totalFields = ref(4);
+formStore.formData = formData;
 
-const filledField = computed(() => {
-  return Object.values(formData).filter((value) => value.trim() !== "").length;
-});
+// const totalFields = ref(4);
 
-const progress = computed(() => {
-  return Math.round((filledField.value / totalFields.value) * 100);
-});
+// const filledField = computed(() => {
+//   return Object.values(formData).filter((value) => value.trim() !== "").length;
+// });
+
+// const progress = computed(() => {
+//   return Math.round((filledField.value / totalFields.value) * 100);
+// });
 
 const resetForm = () => {
   (formData.userName = ""),
     (formData.age = ""),
     (formData.profession = ""),
     (formData.email = ""),
-    (showPopup.value = false);
-
-  isModel.value = true;
+    (isModal.value = true);
+  showPopup.value = false;
 };
 
 const onSubmit = () => {
-  isModel.value = false;
+  isModal.value = false;
   showPopup.value = true;
 };
 </script>
@@ -110,7 +117,7 @@ main {
   justify-content: center;
   align-items: center;
   font-family: Arial, sans-serif;
-  margin:auto;
+  margin: auto;
 }
 form {
   background: white;

@@ -1,22 +1,22 @@
 <template>
   <header class="main-container">
     <section class="sub-container">
-      <h1>{{ appName }}</h1>
+      <h1>{{headerStore.projectName }}</h1>
       <button type="button" class="logout" @click="onLogout()">Logout</button>
     </section>
   </header>
 </template>
 
 <script setup>
-const props = defineProps({
-  appName: String,
-});
+import { useHeaderStore } from '../stores/headerStore';
 
-const emit = defineEmits(["logout"]);
 
-const onLogout = () => {
-  emit("logout");
-};
+const headerStore = useHeaderStore();
+
+const onLogout = ()=> {
+  headerStore.handleLogout();
+}
+
 </script>
 
 <style scoped>

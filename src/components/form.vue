@@ -15,7 +15,7 @@
         <!--  Name + Email -->
         <div class="row">
           <div class="field">
-            <label for="name">Full Name</label>
+            <label for="name">Full Name*</label>
             <Field
               id="name"
               type="text"
@@ -28,7 +28,7 @@
             <ErrorMessage name="fullName" class="error" id="error-fullName" />
           </div>
           <div class="field">
-            <label for="email">Email</label>
+            <label for="email">Email*</label>
             <Field
               id="email"
               type="email"
@@ -45,7 +45,7 @@
         <!--  Password + DOB -->
         <div class="row">
           <div class="field">
-            <label for="password">Password</label>
+            <label for="password">Password*</label>
             <Field
               id="password"
               type="password"
@@ -58,7 +58,7 @@
             <ErrorMessage name="password" class="error" id="error-password" />
           </div>
           <div class="field">
-            <label for="dob">Date of Birth</label>
+            <label for="dob">Date of Birth*</label>
             <Field
               id="dob"
               type="date"
@@ -80,7 +80,7 @@
               :aria-invalid="errors.gender ? 'true' : 'false'"
               aria-describedby="error-gender"
             >
-              <legend>Gender</legend>
+              <legend>Gender*</legend>
               <label
                 ><Field type="radio" name="gender" value="male" /> Male</label
               >
@@ -99,7 +99,7 @@
               :aria-invalid="errors.interests ? 'true' : 'false'"
               aria-describedby="error-interests"
             >
-              <legend>Interests</legend>
+              <legend>Interests*</legend>
               <label
                 ><Field type="checkbox" value="coding" name="interests" />
                 Coding</label
@@ -129,7 +129,7 @@
               :aria-invalid="errors.qualification ? 'true' : 'false'"
               aria-describedby="error-qualification"
             >
-              <legend>Qualification</legend>
+              <legend>Qualification*</legend>
               <Field id="qualification" name="qualification" as="select">
                 <option value="">Select Qualification</option>
                 <option value="highSchool" name="qualification">
@@ -149,7 +149,7 @@
           </div>
 
           <div class="field">
-            <label for="profession">Profession</label>
+            <label for="profession">Profession*</label>
             <Field
               id="profession"
               type="text"
@@ -175,7 +175,7 @@
               :aria-invalid="errors.country ? 'true' : 'false'"
               aria-describedby="error-country"
             >
-              <legend>Country</legend>
+              <legend>Country*</legend>
               <Field id="country" name="country" as="select">
                 <option value="">Select Country</option>
                 <option value="india" name="country">India</option>
@@ -187,7 +187,7 @@
             <ErrorMessage name="country" class="error" id="error-country" />
           </div>
           <div class="field">
-            <label for="phone">Contact Number</label>
+            <label for="phone">Contact Number*</label>
             <Field
               id="phone"
               name="phone"
@@ -204,7 +204,7 @@
         <!-- Address (Full Width) -->
         <div class="row full-width">
           <div class="field full-width">
-            <label class="group-label">Address</label>
+            <label class="group-label">Address*</label>
 
             <div class="address-grid">
               <div class="field">
@@ -240,6 +240,24 @@
           <button type="submit" :disabled="isSubmitting">Register</button>
         </div>
       </form>
+      <!-- Progress Bar -->
+      <section
+        v-if="showModal"
+        class="progress-layout"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        :aria-valuenow="formStore.progress"
+      >
+        <p>{{ formStore.progress }}% Completed</p>
+
+        <div class="progress-bar">
+          <div
+            class="bar-filled"
+            :style="{ width: formStore.progress + '%' }"
+          ></div>
+        </div>
+      </section>
     </div>
   </section>
 </template>
@@ -249,6 +267,9 @@ import { Field, ErrorMessage, useForm } from "vee-validate";
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import * as Yup from "yup";
+import { useFormStore } from "../stores/formStore";
+
+const formStore = useFormStore();
 
 const { handleSubmit, resetForm, meta, errors, values } = useForm({
   validationSchema: Yup.object({
@@ -345,6 +366,7 @@ const unsavedChanges = ref(false);
 watch(
   values,
   (newValues) => {
+    formStore.syncFormData(newValues);
     unsavedChanges.value = Object.values(newValues).some((val) => {
       if (Array.isArray(val)) return val.length > 0;
       return val !== "" && val != null;
@@ -361,7 +383,8 @@ watch(
   background: rgba(0, 0, 0, 0.35);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
+  
   padding: 10px;
   overflow-y: auto;
   z-index: 1000;
@@ -375,12 +398,13 @@ watch(
   border-radius: 10px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
-  margin-top: 2em;
+
 }
 .title-x {
   display: flex;
   justify-content: space-between;
 }
+
 .title {
   margin-bottom: 20px;
   font-size: 1.6rem;
@@ -504,6 +528,32 @@ button:disabled {
   animation: fadeIn 0.3s ease-in-out;
 }
 
+.progress-layout {
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+p {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-filled {
+  height: 100%;
+  background-color: #007bff;
+  width: 0;
+  transition: width 0.3s ease;
+}
+
 /* Optional: smooth fade-in animation */
 @keyframes fadeIn {
   from {
@@ -533,6 +583,19 @@ button:disabled {
 
   .btn button {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .overlay {
+    align-items: flex-start; 
+    padding: 20px 10px;
+  }
+
+  .modal {
+    max-height: 90vh; 
+    overflow-y: auto; 
+    margin-top: 0; 
   }
 }
 </style>
