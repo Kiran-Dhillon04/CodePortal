@@ -7,7 +7,11 @@
         <p>List of registered users</p>
       </div>
 
-      <div class="header-right">
+      <div class="header-actions">
+        <ReusableButton variant="secondary" @click="searchBtn">
+          Search
+        </ReusableButton>
+
         <input
           type="search"
           v-model="searchQuery"
@@ -59,38 +63,37 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted } from "vue";
 import { useUserStore } from "../stores/userStore";
+import { useUserSearch } from "../composables/useUserSearch";
+import ReusableButton from "../components/reusableButton.vue";
 
 const userStore = useUserStore();
-const searchQuery = ref("");
-
-const debouncedQuery = ref("");
-let timeout;
-watch(searchQuery, (val) => {
-  clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    debouncedQuery.value = val;
-  }, 500);
-});
+const { searchQuery, filteredUsers } = useUserSearch(
+  computed(() => userStore.users)
+);
 
 onMounted(() => {
   userStore.fetchUsers();
 });
 
-const filteredUsers = computed(() => {
-  if (!debouncedQuery.value) return userStore.users;
-  const q = debouncedQuery.value.toLocaleLowerCase();
-  return userStore.users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(q) ||
-      user.email.toLowerCase().includes(q) ||
-      user.profession.toLowerCase().includes(q)
-  );
-});
+const searchBtn = () => {
+  alert("Search Button is Clicked!");
+};
 </script>
 
 <style scoped>
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.header-actions input {
+  padding: 6px 10px;
+  width: 220px;
+}
+
 .loader {
   display: flex;
   justify-content: center;
