@@ -28,6 +28,7 @@ const menu = ref([
   },
   { id: 4, name: "Settings", link: "/settings" },
   { id: 5, name: "RegisteredUser", link:"/registeredUser"},
+  { id: 6, name: "Users", link:"/users"},
 ]);
 const isOpen = ref(true);
 </script>

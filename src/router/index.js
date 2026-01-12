@@ -6,6 +6,7 @@ import Dashboard from "../components/Dashboard.vue";
 import Profile from "../components/profile.vue";
 import RegisteredUser from "../components/registeredUser.vue";
 import Form from "../components/form.vue";
+import Users from "../components/users.vue";
 
 const auth = {
   isLoggedIn: true,
@@ -36,7 +37,10 @@ const routes = [
   {
     path: "/registeredUser", name: "RegisteredUser", component: RegisteredUser, children: [
       { path: 'form', name: 'Form', component:Form}
-  ]},
+    ]
+  },
+    { path: "/users", name: "Users", component: Users },
+
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
